@@ -1,4 +1,4 @@
-/* //The require function intergrate the two different files 
+//The require function intergrate the two different files 
 // name variable is a referance variable it can be anything 
 const name = require('./utils.js')
 
@@ -18,7 +18,7 @@ const sum = add_function(3,6)
 
 // printing the answer in log
 console.log(sum);
- */
+
 //----------------------------------------------------------------------------------------------------------
 
 const getnodes = require('./notes.js')

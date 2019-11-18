@@ -1,4 +1,9 @@
+console.log('The file name is utils.js');
 
+const name = 'jeevan'
+
+//Exporting the name variable for global files
+module.exports = name
 //---------------------------------------------------------------------------------------------------------
 
 // Creating the function to add 2 numbers 
