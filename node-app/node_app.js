@@ -1,3 +1,4 @@
+//Declaration of fs module for fs variable
 const fs = require('fs')
 
 // This is to create a new notepad file using node js and to write some text in that notepad 
