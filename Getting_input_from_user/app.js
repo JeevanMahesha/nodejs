@@ -1,6 +1,8 @@
 /* 
-yargs package is used for give command in command line
-
+1.yargs package is used for give command in command line
+2. yargs parse is used to pass the argument for the function 
+3. in yargs builder option is used to pass the argument values in the via command line 
+4. storing the data in json formate in a json file 
 */
 const yargs = require('yargs')
 
@@ -11,9 +13,22 @@ yargs.version('9.0.0')
 yargs.command({
     command : 'add',
     describe : 'Adding a note',
-    handler : function(){
-        console.log('Adding the new notes..........!');
-        
+    builder : {
+        title:{
+            describe : 'Notes Title',
+            demandOption : true,
+            type : 'string'
+        },
+        body:{
+            describe : 'Notes Body',
+            demandOption :true,
+            type : 'string'
+        }
+    },
+    handler : function(argv){
+       console.log('Title : ' + argv.title);
+       console.log('Body : '+ argv.body);
+       
     }
 })
 
@@ -47,4 +62,4 @@ yargs.command({
     }
 })
 
-console.log(yargs.argv);
+yargs.parse()
