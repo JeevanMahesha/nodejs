@@ -1,4 +1,11 @@
 /* 
+how to install npm module 
+1. command for install npm module is 
+        npm init 
+
+*/
+//---------------------------------------------------------------------------------------------------------
+/* 
 1. Install the required NPM package from npmjs.com 
 2. how to install the package 
     a. install i {package name} along with version if it require
