@@ -1,12 +1,25 @@
 const geocoding = require('./utils/geocoding')
 const forecast = require('./utils/forecast')
 
-geocoding('peelamadu', (error, data) => {
-    console.log('Error', error);
-    console.log('Success', data);
-})
+const address = process.argv[2]
+if (address) {
+    geocoding(address, (error, geocodingdata) => {
+        if (error) {
+            return console.log('Error', error);
+        }
+        forecast(geocodingdata.latitude, geocodingdata.longtitude, (error, forecastdata) => {
+            if (error) {
+                return console.log('Error', error);
+            }
+            console.log({
+                'location': geocodingdata.location,
+                'description': forecastdata.description,
+                'temperatur': forecastdata.temperatur,
+                'feelslike': forecastdata.feelslike
+            })
+        })
+    })
+} else {
+    console.log('Please provide the address');
 
-forecast(11.03143, 77.01262, (error, data) => {
-    console.log('Error', error)
-    console.log('Data', data)
-})
+}
