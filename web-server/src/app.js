@@ -1,21 +1,17 @@
+const path = require('path')
 const express = require('express')
 
 const app = express()
+const pathForHTMLPage = path.join(__dirname, '../public')
 
-app.get('', (req, res) => {
-    res.send('Hello Express!')
-})
 
-app.get('/help', (req, res) => {
-    res.send('This is help section')
-})
-
-app.get('/about', (req, res) => {
-    res.send('This is about section')
-})
+app.use(express.static(pathForHTMLPage))
 
 app.get('/weather', (req, res) => {
-    res.send('This is weather section')
+    res.send({
+        forcast: 55,
+        location: 'Mysore'
+    })
 })
 
 
