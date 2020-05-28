@@ -9,8 +9,7 @@ const user = {
     'address': 'mysore'
 }
 
-// console.log(user);
-
+console.log(user);
 
 // Destructer the object
 const product = {
@@ -28,4 +27,5 @@ console.log(rating);
 const transcation = (type, { lable, Price, sealprice }) => {
     console.log(type, lable, sealprice);
 }
+
 transcation('ordered', product)
