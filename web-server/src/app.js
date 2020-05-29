@@ -44,6 +44,20 @@ app.get('/weather', (req, res) => {
         location: 'Mysore'
     })
 })
+app.get('/help/*', (req, res) => {
+    res.render('error', {
+        errorText: 'help 404 Error'
+    })
+})
+
+
+app.get('*', (req, res) => {
+    res.render('error', {
+        errorText: '404 Error'
+    })
+})
+
+
 
 app.listen(3000, () => {
     console.log('Server is up on port 3000');
