@@ -5,6 +5,7 @@
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #ABB2B9;
 }
 
 .header {
@@ -58,7 +59,38 @@ img {
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: red;
-    color: white;
+    background-color: #ECF0F1;
+    color: black;
     text-align: center;
+}
+
+#div {
+    margin: 12em 2em 2em 26em;
+    width: 500px;
+    height: auto;
+    text-align: center;
+}
+
+input[type=text] {
+    position: relative;
+    padding: 15px 40px 15px 20px;
+    width: 300px;
+    color: #525252;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 100;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #FFFFFF 0%, #464747 #F9F9F9 100%);
+}
+
+button {
+    padding: 15.5px 23px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
 }
