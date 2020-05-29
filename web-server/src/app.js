@@ -1,6 +1,8 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
+const geocoding = require('./utils/geocoding')
+const forecast = require('./utils/forecast')
 
 const app = express()
 
@@ -39,11 +41,33 @@ app.get('/help', (req, res) => {
 
 
 app.get('/weather', (req, res) => {
-    res.send({
-        forcast: 55,
-        location: 'Mysore'
+    if (!req.query.address) {
+        return res.send({
+            error: 'You must provide address to know the weather!'
+        })
+    }
+    geocoding(req.query.address, (error, { latitude, longtitude, location } = {}) => {
+        if (error) {
+            return res.send({
+                Error: error
+            })
+        }
+        forecast(latitude, longtitude, (error, { description, temperatur, feelslike }) => {
+            if (error) {
+                return res.send({
+                    Error: error
+                })
+            }
+            return res.send({
+                'location': location,
+                'description': description,
+                'temperatur': temperatur,
+                'feelslike': feelslike
+            })
+        })
     })
 })
+
 app.get('/help/*', (req, res) => {
     res.render('error', {
         errorText: 'help 404 Error'
