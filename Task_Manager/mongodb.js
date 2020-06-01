@@ -9,8 +9,32 @@ mongoclient.connect(connectionURL, { 'useNewUrlParser': true }, (error, client) 
         return console.log('Unable to connect the Database');
     }
     const db = client.db(databaseName)
-    db.collection('user').insertOne({
-        "name": "jeevan",
-        "age": 23
+
+    //=======    INSERT ONE RECORD TO DB  ==========
+    // db.collection('user').insertOne({
+    //     "name": "jeevan",
+    //     "age": 23
+    // }, (error, result) => {
+    //     if (error) {
+    //         return console.log('Unable to insert to db');
+    //     }
+    //     console.log(result.ops);
+    // })
+
+    //=======    INSERT MANY RECORD TO DB  ==========
+    db.collection('task').insertMany([{
+        description: "this is first record",
+        completed: true
+    }, {
+        description: "this is secound record",
+        completed: false
+    }, {
+        description: "this is third record",
+        completed: true
+    }], (error, result) => {
+        if (error) {
+            return console.log('Unable to insert record');
+        }
+        console.log(result.ops);
     })
 })
