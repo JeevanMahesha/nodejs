@@ -18,6 +18,35 @@
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
   </div>
+<div class="d-flex justify-content-center mt-5 text-center" >
+    <!-- Card -->
+<div class="card weather-card pl-2 pr-2">
+<h4 class="card-title" >Weather Status </h4>
+  <!-- Card content -->
+  <div class="card-body pb-3">
+
+    <!-- Title -->
+    <h4 class="card-title font-weight-bold" id="location-name-message"></h4>
+    <!-- Text -->
+    <p class="card-text" id="weather_descriptions"></p>
+    <div class="d-flex justify-content-between">
+    <div id="temperature">
+    </div>
+    </div>
+    {{!-- <div class="d-flex justify-content-between mb-4">
+      <p><i class="fas fa-tint fa-lg text-info pr-2"></i>3% Precipitation</p>
+      <p><i class="fas fa-leaf fa-lg grey-text pr-2"></i>21 km/h Winds</p>
+    </div> --}}
+
+
+    <div class="collapse-content">
+      <hr class="">
+      <p id="country"></p>
+    </div>
+  </div>
+</div>
+<!-- Card -->
+</div>
     {{>footer}}
     
 
