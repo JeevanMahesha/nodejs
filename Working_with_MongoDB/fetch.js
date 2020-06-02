@@ -1,6 +1,5 @@
 const { MongoClient, ObjectID } = require('mongodb')
 
-
 const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager-db'
 
@@ -9,11 +8,7 @@ MongoClient.connect(connectionURL, { 'useNewUrlParser': true }, (error, client) 
         return console.log('Unable to connect the Database');
     }
     const db = client.db(databaseName)
-
-
-
-
-    //====== find the one record from the database
+        //====== find the one record from the database
     db.collection('user').findOne({ _id: new ObjectID("5ed4b2f4682e59220c5081dd") }, (error, result) => {
         if (error) {
             return console.log('Unable to fetch data');
