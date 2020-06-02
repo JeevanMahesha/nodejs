@@ -10,33 +10,7 @@ MongoClient.connect(connectionURL, { 'useNewUrlParser': true }, (error, client) 
     }
     const db = client.db(databaseName)
 
-    //=======    INSERT ONE RECORD TO DB  ==========
-    // db.collection('user').insertOne({
-    //     "name": "jeevan",
-    //     "age": 23
-    // }, (error, result) => {
-    //     if (error) {
-    //         return console.log('Unable to insert to db');
-    //     }
-    //     console.log(result.ops);
-    // })
 
-    //=======    INSERT MANY RECORD TO DB  ==========
-    // db.collection('task').insertMany([{
-    //     description: "this is first record",
-    //     completed: true
-    // }, {
-    //     description: "this is secound record",
-    //     completed: false
-    // }, {
-    //     description: "this is third record",
-    //     completed: true
-    // }], (error, result) => {
-    //     if (error) {
-    //         return console.log('Unable to insert record');
-    //     }
-    //     console.log(result.ops);
-    // })
 
 
     //====== find the one record from the database
