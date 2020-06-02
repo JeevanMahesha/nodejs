@@ -11,7 +11,7 @@ const getcoding = (address, callback) => {
     setTimeout(() => {
         const data = {
             'latitude': 0,
-            'longtitude': 0
+            'longtitude': 0 
         }
         callback(data);
     }, 2000);
