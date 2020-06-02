@@ -57,16 +57,42 @@ MongoClient.connect(connectionURL, { 'useNewUrlParser': true }, (error, client) 
     //     console.log(userCount)
     // })
 
+    // === challenge given
+    // db.collection('task').findOne({ _id: new ObjectID("5ed4b7ba8ce52a209c1d340d") }, (error, result) => {
+    //     if (error) {
+    //         console.log('unable to find');
+    //     }
+    //     console.log(result);
+    // })
 
-    db.collection('task').findOne({ _id: new ObjectID("5ed4b7ba8ce52a209c1d340d") }, (error, result) => {
-        if (error) {
-            console.log('unable to find');
+    // db.collection('task').find({ completed: false }).toArray((error, result) => {
+    //     console.log(result);
+    // })
+
+    // ====== UPDATE THE RECORD IN DB
+    // db.collection('user').updateOne({
+    //     _id: new ObjectID("5ed4b2f4682e59220c5081dd")
+    // }, {
+    //     $set: {
+    //         name: "Latha",
+    //         age: 40
+    //     }
+    // }).then((result) => {
+    //     console.log(result);
+    // }).catch((error) => {
+    //     console.log(error);
+    // })
+
+    //======> UPDATE THE MANY RECORD    
+    db.collection('task').updateMany({
+        completed: false
+    }, {
+        $set: {
+            completed: true
         }
+    }).then((result) => {
         console.log(result);
+    }).catch((error) => {
+        console.log(error);
     })
-
-    db.collection('task').find({ completed: false }).toArray((error, result) => {
-        console.log(result);
-    })
-
 })
