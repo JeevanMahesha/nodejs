@@ -24,6 +24,24 @@ app.post("/users", async(req, res) => {
     // })
 })
 
+app.patch("/users/:id", async(req, res) => {
+    const userdata = Object.keys(req.body)
+    const allowdata = ["name", "email", "password", "age"]
+    const isValidData = userdata.every((data) => allowdata.includes(data))
+    if (!isValidData) {
+        return res.status(400).send({ error: "invalid Input" })
+    }
+    try {
+        const userUpdate = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        if (!userUpdate) {
+            return res.status(404).send("No user found")
+        }
+        res.send(userUpdate)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
 app.get("/users", async(req, res) => {
 
     try {
@@ -66,6 +84,24 @@ app.post("/tasks", async(req, res) => {
     // }).catch((error) => {
     //     res.status(500).send(error)
     // })
+})
+
+app.patch("/tasks/:id", async(req, res) => {
+    const taskdata = Object.keys(req.body)
+    const allowdata = ["description", "completion"]
+    const isValidData = taskdata.every((data) => allowdata.includes(data))
+    if (!isValidData) {
+        return res.status(400).send({ error: "invalid input" })
+    }
+    try {
+        const taskupdate = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        if (!taskupdate) {
+            return res.status(404).send("Task not found")
+        }
+        res.send(taskupdate)
+    } catch (e) {
+        res.status(500).send(e)
+    }
 })
 
 app.get("/tasks", async(req, res) => {
