@@ -42,6 +42,18 @@ app.patch("/users/:id", async(req, res) => {
     }
 })
 
+app.delete("/users/:id", async(req, res) => {
+    try {
+        const userdelete = await User.findByIdAndDelete(req.params.id)
+        if (!userdelete) {
+            return res.status(404).send({ "error": "user not found to delete" })
+        }
+        res.send({ "success": userdelete })
+    } catch (e) {
+        res.status(500).send("server error")
+    }
+})
+
 app.get("/users", async(req, res) => {
 
     try {
@@ -99,6 +111,18 @@ app.patch("/tasks/:id", async(req, res) => {
             return res.status(404).send("Task not found")
         }
         res.send(taskupdate)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
+app.delete("/tasks/:id", async(req, res) => {
+    try {
+        const taskdelete = await Task.findByIdAndDelete(req.params.id)
+        if (!taskdelete) {
+            return res.status(404).send("Task not found to delete")
+        }
+        res.send(taskdelete)
     } catch (e) {
         res.status(500).send(e)
     }
