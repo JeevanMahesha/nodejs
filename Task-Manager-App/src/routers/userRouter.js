@@ -26,7 +26,10 @@ router.patch("/users/:id", async(req, res) => {
         return res.status(400).send({ error: "invalid Input" })
     }
     try {
-        const userUpdate = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const userUpdate = await User.findById(req.params.id)
+        userdata.forEach(data => userUpdate[data] = req.body[data]);
+        await userUpdate.save()
+            //const userUpdate = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
         if (!userUpdate) {
             return res.status(404).send("No user found")
         }

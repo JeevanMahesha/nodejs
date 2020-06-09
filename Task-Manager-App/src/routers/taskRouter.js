@@ -26,7 +26,10 @@ router.patch("/tasks/:id", async(req, res) => {
         return res.status(400).send({ error: "invalid input" })
     }
     try {
-        const taskupdate = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const taskupdate = await Task.findById(req.params.id)
+        taskdata.forEach(data => taskupdate[data] = req.body[data])
+        await taskupdate.save()
+            //const taskupdate = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
         if (!taskupdate) {
             return res.status(404).send("Task not found")
         }
