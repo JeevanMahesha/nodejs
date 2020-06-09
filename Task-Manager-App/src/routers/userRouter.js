@@ -1,5 +1,6 @@
 const express = require("express")
 const User = require("../models/userModel")
+const auth = require("../../middleware/auth")
 const router = new express.Router()
 
 
@@ -62,14 +63,15 @@ router.delete("/users/:id", async(req, res) => {
     }
 })
 
-router.get("/users", async(req, res) => {
+router.get("/users/me", auth, async(req, res) => {
 
-    try {
-        const user = await User.find({})
-        res.status(200).send(user)
-    } catch (e) {
-        res.status(500).send(e)
-    }
+    res.send(req.user)
+        // try {
+        //     const user = await User.find({})
+        //     res.status(200).send(user)
+        // } catch (e) {
+        //     res.status(500).send(e)
+        // }
 
     // User.find({}).then((users) => {
     //     res.send(users)
