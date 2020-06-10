@@ -52,34 +52,32 @@ router.post("/users/logoutall", auth, async(req, res) => {
     }
 })
 
-router.patch("/users/:id", async(req, res) => {
+router.patch("/users/me", auth, async(req, res) => {
     const userdata = Object.keys(req.body)
-    const allowdata = ["name", "email", "password", "age"]
+    const allowdata = ["name", "email", "age"]
     const isValidData = userdata.every((data) => allowdata.includes(data))
     if (!isValidData) {
         return res.status(400).send({ error: "invalid Input" })
     }
     try {
-        const userUpdate = await User.findById(req.params.id)
-        userdata.forEach(data => userUpdate[data] = req.body[data]);
-        await userUpdate.save()
+
+        userdata.forEach(data => req.user[data] = req.body[data]);
+        await req.user.save()
             //const userUpdate = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
-        if (!userUpdate) {
-            return res.status(404).send("No user found")
-        }
-        res.send(userUpdate)
+        res.send(req.user)
     } catch (e) {
         res.status(500).send(e)
     }
 })
 
-router.delete("/users/:id", async(req, res) => {
+router.delete("/users/me", auth, async(req, res) => {
     try {
-        const userdelete = await User.findByIdAndDelete(req.params.id)
-        if (!userdelete) {
-            return res.status(404).send({ "error": "user not found to delete" })
-        }
-        res.send({ "success": userdelete })
+        // const userdelete = await User.findByIdAndDelete(req.params.id)
+        // if (!userdelete) {
+        //     return res.status(404).send({ "error": "user not found to delete" })
+        // }
+        await req.user.remove()
+        res.send({ "success": req.user })
     } catch (e) {
         res.status(500).send("server error")
     }
@@ -105,17 +103,17 @@ router.get("/users", async(req, res) => {
     })
 })
 
-router.get("/users/:id", async(req, res) => {
-    const _id = req.params.id
-    try {
-        const user = await User.findById(_id)
-        if (!user) {
-            return res.status(404).send("User not found")
-        }
-        res.send(user)
-    } catch (e) {
-        res.status(500).send(e)
-    }
-})
+// router.get("/users/:id", async(req, res) => {
+//     const _id = req.params.id
+//     try {
+//         const user = await User.findById(_id)
+//         if (!user) {
+//             return res.status(404).send("User not found")
+//         }
+//         res.send(user)
+//     } catch (e) {
+//         res.status(500).send(e)
+//     }
+// })
 
 module.exports = router
