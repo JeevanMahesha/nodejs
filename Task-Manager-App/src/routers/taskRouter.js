@@ -1,10 +1,15 @@
 const express = require("express")
+const auth = require("../middleware/auth")
 const Task = require("../models/taskModel")
 const router = new express.Router()
 
 
-router.post("/tasks", async(req, res) => {
-    const task = new Task(req.body)
+router.post("/tasks", auth, async(req, res) => {
+    //const task = new Task(req.body)
+    const task = new Task({
+        ...req.body,
+        owner: req.user._id
+    })
     try {
         task.save()
         res.status(201).send(task)
@@ -18,7 +23,7 @@ router.post("/tasks", async(req, res) => {
     // })
 })
 
-router.patch("/tasks/:id", async(req, res) => {
+router.patch("/tasks/:id", auth, async(req, res) => {
     const taskdata = Object.keys(req.body)
     const allowdata = ["description", "completion"]
     const isValidData = taskdata.every((data) => allowdata.includes(data))
@@ -26,13 +31,12 @@ router.patch("/tasks/:id", async(req, res) => {
         return res.status(400).send({ error: "invalid input" })
     }
     try {
-        const taskupdate = await Task.findById(req.params.id)
-        taskdata.forEach(data => taskupdate[data] = req.body[data])
-        await taskupdate.save()
-            //const taskupdate = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const taskupdate = await Task.findOne({ _id: req.params.id, 'owner': req.user._id })
         if (!taskupdate) {
             return res.status(404).send("Task not found")
         }
+        taskdata.forEach(data => taskupdate[data] = req.body[data])
+        await taskupdate.save()
         res.send(taskupdate)
     } catch (e) {
         res.status(500).send(e)
@@ -41,9 +45,9 @@ router.patch("/tasks/:id", async(req, res) => {
 
 
 
-router.delete("/tasks/:id", async(req, res) => {
+router.delete("/tasks/:id", auth, async(req, res) => {
     try {
-        const taskdelete = await Task.findByIdAndDelete(req.params.id)
+        const taskdelete = await Task.findByIdAndDelete({ _id: req.params.id, owner: req.user._id })
         if (!taskdelete) {
             return res.status(404).send("Task not found to delete")
         }
@@ -53,13 +57,13 @@ router.delete("/tasks/:id", async(req, res) => {
     }
 })
 
-router.get("/tasks", async(req, res) => {
+router.get("/tasks", auth, async(req, res) => {
     try {
-        const task = await Task.find({})
+        const task = await req.user.populate('usertasks').execPopulate()
         if (!task) {
             return res.status(404).send("No Task")
         }
-        res.send(task)
+        res.send(task.usertasks)
     } catch (e) {
         res.status(500).send(e)
     }
@@ -73,10 +77,10 @@ router.get("/tasks", async(req, res) => {
     // })
 })
 
-router.get("/tasks/:id", async(req, res) => {
+router.get("/tasks/:id", auth, async(req, res) => {
     const _id = req.params.id
     try {
-        const task = await Task.findById(_id)
+        const task = await Task.findOne({ _id, 'owner': req.user._id })
         if (!task) {
             return res.status(404).send("Not found")
         }
