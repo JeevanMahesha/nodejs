@@ -57,9 +57,23 @@ router.delete("/tasks/:id", auth, async(req, res) => {
     }
 })
 
+
+//GET /tesk?completion=true || flase
+// limit=10&skip=0 
 router.get("/tasks", auth, async(req, res) => {
+    const match = {}
+    if (req.query.completion) {
+        match.completion = req.query.completion === 'true'
+    }
     try {
-        const task = await req.user.populate('usertasks').execPopulate()
+        const task = await req.user.populate({
+            path: 'usertasks',
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip)
+            }
+        }).execPopulate()
         if (!task) {
             return res.status(404).send("No Task")
         }
