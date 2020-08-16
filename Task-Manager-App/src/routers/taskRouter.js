@@ -2,7 +2,26 @@ const express = require("express")
 const auth = require("../middleware/auth")
 const Task = require("../models/taskModel")
 const router = new express.Router()
+const multer = require("multer")
 
+const uploadDoc = (multer({
+    dest: 'Doc',
+    limits: {
+        fileSize: 500000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(doc|docx|pdf)$/)) {
+            return cb(new Error("Please Upload doc only"))
+        }
+        cb(undefined, true)
+    }
+}))
+
+router.post("/tasks/upload", uploadDoc.single("document"), (req, res) => {
+    res.send()
+}, (e, req, res, next) => {
+    res.status(400).send({ "Error": e.message })
+})
 
 router.post("/tasks", auth, async(req, res) => {
     //const task = new Task(req.body)

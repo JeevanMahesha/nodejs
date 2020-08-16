@@ -4,6 +4,7 @@ const validator = require("validator")
 const jwt = require("jsonwebtoken")
 const Task = require("./taskModel")
 
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -42,6 +43,9 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
+    avater: {
+        type: Buffer
+    },
     tokens: [{
         token: {
             type: String,
@@ -71,6 +75,7 @@ userSchema.methods.generateAuthToken = async function() {
     await this.save()
     return token
 }
+
 
 userSchema.statics.findByCredentials = async(email, password) => {
     const user = await User.findOne({ email })
