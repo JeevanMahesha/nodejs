@@ -7,6 +7,7 @@ app.use(express.json())
 
 let fooValue
 key = "foo"
+
 app.get('/', async (req, res) => {
     fooValue = await etcdGetAndWatch.getFooValue(key)
     await etcdGetAndWatch.watchFooValue(key).then(
