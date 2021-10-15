@@ -1,26 +1,35 @@
 const express = require("express");
-const etcdGetAndWatch = require("./etcd")
+const etcdClient = require("./etcd")
 
 const app = express();
 
 app.use(express.json())
 
-let fooValue = "No Foo Value is updated"
-let key = "foo"
+let Mongo = {
+    UserName: null,
+    Password: null
+}
+let MongoUserPass = ["UserName", "Password"]
 
-app.get('/', async (req, res) => {
-    fooValue = await etcdGetAndWatch.getFooValue(key);
-    const watcher = await etcdGetAndWatch.watchFooValue(key);
-    watcher.on("put", watcherPut)
-    res.send('This is Foo Value : ' + fooValue)
-});
 
-function watcherPut(watchValue) {
-    fooValue = watchValue.value.toString();
+MongoUserPass.forEach(each => {
+    getDataFromETCD(each)
+})
+
+async function getDataFromETCD(keyValue) {
+    Mongo[keyValue] = await etcdClient.getValueFromETCD(keyValue);
+    const watcher = await etcdClient.watchTheKeyValueChange(keyValue);
+    watcher.on("put", putTheChangedValue)
+}
+
+
+function putTheChangedValue(watchValue) {
+    let { key, value } = watchValue
+    Mongo[key.toString()] = value.toString()
 }
 
 setInterval(() => {
-    console.log(fooValue);
+    console.log(Mongo);
 }, 2000)
 
 app.listen(8080, () => {

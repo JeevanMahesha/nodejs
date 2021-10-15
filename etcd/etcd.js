@@ -1,19 +1,19 @@
 const { Etcd3 } = require("etcd3");
 
-const client = new Etcd3();
+const etcdClient = new Etcd3();
 
-const watchFooValue = async (key) => {
-    return client
+const watchTheKeyValueChange = async (key) => {
+    return etcdClient
         .watch()
         .key(key)
         .create();
 }
 
-const getFooValue = async (key) => {
-    return client.get(key).string()
+const getValueFromETCD = async (key) => {
+    return etcdClient.get(key).string()
 }
 
 module.exports = {
-    getFooValue,
-    watchFooValue
+    watchTheKeyValueChange,
+    getValueFromETCD
 }
