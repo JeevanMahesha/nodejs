@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Customexception } from 'src/exception/customexception';
 import { IProduct } from './products.model';
 
 @Injectable()
@@ -56,7 +57,15 @@ export class ProductsService {
   // }
 
   private async findTheProductById(id: string): Promise<IProduct> {
-    const productById = await this.productModel.findById(id);
+    let productById = null;
+    try {
+      productById = await this.productModel.findById(id);
+    } catch (error) {
+      throw new Customexception(
+        'Unable to find the product',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
     const filteredData = this.filterTheReturnData(productById);
     if (!productById) {
       throw new NotFoundException('Product not found');
