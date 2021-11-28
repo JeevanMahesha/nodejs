@@ -3,10 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
+import { Customexception } from 'src/exception/customexception';
 import { IProduct } from './products.model';
 import { ProductsService } from './products.service';
 
@@ -45,13 +47,13 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  updateTheProductById(
+  async updateTheProductById(
     @Param('id') prodId: string,
     @Body('title') prodTitle: string,
     @Body('des') prodDes: string,
     @Body('price') prodPrice: number,
-  ): { message: string } {
-    this.productService.updateTheProductById(
+  ): Promise<{ message: string }> {
+    await this.productService.updateTheProductById(
       prodId,
       prodTitle,
       prodDes,
@@ -61,14 +63,14 @@ export class ProductsController {
     return { message: 'updated successfully' };
   }
 
-  // @Delete(':id')
-  // deleteProductById(@Param('id') prodId: string) {
-  //   try {
-  //     this.productService.deleteProducById(prodId);
-  //   } catch (error) {
-  //     console.log(error);
-  //     return 'Not able to Delete';
-  //   }
-  //   return 'Delete Successfully';
-  // }
+  @Delete(':id')
+  async deleteProductById(@Param('id') prodId: string) {
+    try {
+      await this.productService.deleteProductById(prodId);
+    } catch (error) {
+      console.log(error);
+      throw new Customexception(error.message, error.status);
+    }
+    return 'Delete Successfully';
+  }
 }

@@ -61,17 +61,20 @@ export class ProductsService {
     } catch (error) {
       console.log(error.message);
       throw new Customexception(
-        'Unable to update the Product',
+        error.message,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
-  // deleteProducById(id: any) {
-  //   const [productIndex = null, productById = null] =
-  //     this.findTheProductById(id);
-  //   this.productsList.splice(productIndex, 1);
-  // }
+  async deleteProductById(_id: any) {
+    const { deletedCount = null } = await this.productModel
+      .deleteOne({ _id })
+      .exec();
+    if (deletedCount === 0) {
+      throw new NotFoundException('Product not found');
+    }
+  }
 
   private async findTheProductById(id: string): Promise<IProduct> {
     let productById = null;
@@ -84,7 +87,6 @@ export class ProductsService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
     if (!productById) {
       throw new NotFoundException('Product not found');
     }
