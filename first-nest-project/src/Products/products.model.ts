@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 export const ProductSchema = new Schema({
   title: { type: String, required: true },
@@ -6,7 +6,7 @@ export const ProductSchema = new Schema({
   price: { type: Number, required: true },
 });
 
-export interface IProduct {
+export interface IProduct extends Document {
   id: any;
   title: string;
   description: string;

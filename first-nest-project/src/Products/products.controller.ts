@@ -44,26 +44,22 @@ export class ProductsController {
     return { product };
   }
 
-  // @Patch(':id')
-  // updateTheProductById(
-  //   @Param('id') prodId: string,
-  //   @Body('title') prodTitle: string,
-  //   @Body('des') prodDes: string,
-  //   @Body('price') prodPrice: number,
-  // ) {
-  //   try {
-  //     this.productService.updateTheProductById(
-  //       prodId,
-  //       prodTitle,
-  //       prodDes,
-  //       prodPrice,
-  //     );
-  //   } catch (error) {
-  //     console.log(error);
-  //     return 'Not able to Update';
-  //   }
-  //   return 'updated successfully';
-  // }
+  @Patch(':id')
+  updateTheProductById(
+    @Param('id') prodId: string,
+    @Body('title') prodTitle: string,
+    @Body('des') prodDes: string,
+    @Body('price') prodPrice: number,
+  ): { message: string } {
+    this.productService.updateTheProductById(
+      prodId,
+      prodTitle,
+      prodDes,
+      prodPrice,
+    );
+
+    return { message: 'updated successfully' };
+  }
 
   // @Delete(':id')
   // deleteProductById(@Param('id') prodId: string) {
