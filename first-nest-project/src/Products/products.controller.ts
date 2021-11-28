@@ -15,57 +15,64 @@ export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
 
   @Post()
-  addProduct(
+  async addProduct(
     @Body('title') prodTitle: string,
     @Body('des') prodDes: string,
     @Body('price') prodPrice: number,
-  ): { prodId: string } {
+  ): Promise<{ prodId: string }> {
+    const result = await this.productService.insertProduct(
+      prodTitle,
+      prodDes,
+      prodPrice,
+    );
     return {
-      prodId: this.productService.insertProduct(prodTitle, prodDes, prodPrice),
+      prodId: result,
     };
   }
 
   @Get()
-  getAllProducts(): { productsList: IProduct[] } {
-    const productsList = this.productService.getAllProductDetails();
+  async getAllProducts(): Promise<{ productsList: IProduct[] }> {
+    const productsList = await this.productService.getAllProductDetails();
     return { productsList };
   }
 
   @Get(':id')
-  getTheProductById(@Param('id') prodId: string): { product: IProduct } {
-    const product = this.productService.getTheProductDetailById(prodId);
+  async getTheProductById(
+    @Param('id') prodId: string,
+  ): Promise<{ product: IProduct }> {
+    const product = await this.productService.getTheProductDetailById(prodId);
     return { product };
   }
 
-  @Patch(':id')
-  updateTheProductById(
-    @Param('id') prodId: string,
-    @Body('title') prodTitle: string,
-    @Body('des') prodDes: string,
-    @Body('price') prodPrice: number,
-  ) {
-    try {
-      this.productService.updateTheProductById(
-        prodId,
-        prodTitle,
-        prodDes,
-        prodPrice,
-      );
-    } catch (error) {
-      console.log(error);
-      return 'Not able to Update';
-    }
-    return 'updated successfully';
-  }
+  // @Patch(':id')
+  // updateTheProductById(
+  //   @Param('id') prodId: string,
+  //   @Body('title') prodTitle: string,
+  //   @Body('des') prodDes: string,
+  //   @Body('price') prodPrice: number,
+  // ) {
+  //   try {
+  //     this.productService.updateTheProductById(
+  //       prodId,
+  //       prodTitle,
+  //       prodDes,
+  //       prodPrice,
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //     return 'Not able to Update';
+  //   }
+  //   return 'updated successfully';
+  // }
 
-  @Delete(':id')
-  deleteProductById(@Param('id') prodId: string) {
-    try {
-      this.productService.deleteProducById(prodId);
-    } catch (error) {
-      console.log(error);
-      return 'Not able to Delete';
-    }
-    return 'Delete Successfully';
-  }
+  // @Delete(':id')
+  // deleteProductById(@Param('id') prodId: string) {
+  //   try {
+  //     this.productService.deleteProducById(prodId);
+  //   } catch (error) {
+  //     console.log(error);
+  //     return 'Not able to Delete';
+  //   }
+  //   return 'Delete Successfully';
+  // }
 }
