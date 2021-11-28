@@ -1,62 +1,75 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IpcNetConnectOpts } from 'net';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { IProduct } from './products.model';
 
 @Injectable()
 export class ProductsService {
+  constructor(
+    @InjectModel('Products') private readonly productModel: Model<IProduct>,
+  ) {}
+
   productsList: IProduct[] = [];
 
-  insertProduct(title: string, des: string, price: number): string {
-    const prodId = Math.floor(Math.random() * 9999).toString();
-    const newProduct = new IProduct(prodId, title, des, price);
-    this.productsList.push(newProduct);
-    return prodId;
+  async insertProduct(
+    title: string,
+    description: string,
+    price: number,
+  ): Promise<string> {
+    const newProduct = new this.productModel({ title, description, price });
+    const saveResult = await newProduct.save();
+    return saveResult.id;
   }
 
-  getAllProductDetails(): IProduct[] {
-    return this.productsList.slice();
+  async getAllProductDetails(): Promise<IProduct[]> {
+    const productsList = await this.productModel.find().exec();
+    return productsList.map(this.filterTheReturnData);
   }
 
-  getTheProductDetailById(id: string): IProduct {
-    const [productIndex = null, productById = null] =
-      this.findTheProductById(id);
+  async getTheProductDetailById(id: string): Promise<IProduct> {
+    const productById = await this.findTheProductById(id);
     return { ...productById };
   }
 
-  updateTheProductById(
-    id: string,
-    title: string,
-    des: string,
-    price: number,
-  ): void {
-    const [productIndex = null, productById = null] =
-      this.findTheProductById(id);
-    const updateProduct = { ...productById };
-    if (!title || !des || !price) {
-      throw new Error('Data is Incomplete');
-    }
-    updateProduct.title = title;
-    updateProduct.des = des;
-    updateProduct.price = price;
-    this.productsList[productIndex] = updateProduct;
-  }
+  // updateTheProductById(
+  //   id: string,
+  //   title: string,
+  //   des: string,
+  //   price: number,
+  // ): void {
+  //   const [productIndex = null, productById = null] =
+  //     this.findTheProductById(id);
+  //   const updateProduct = { ...productById };
+  //   if (!title || !des || !price) {
+  //     throw new Error('Data is Incomplete');
+  //   }
+  //   updateProduct.title = title;
+  //   updateProduct.description = des;
+  //   updateProduct.price = price;
+  //   this.productsList[productIndex] = updateProduct;
+  // }
 
-  deleteProducById(id: any) {
-    const [productIndex = null, productById = null] =
-      this.findTheProductById(id);
-    this.productsList.splice(productIndex, 1);
-  }
+  // deleteProducById(id: any) {
+  //   const [productIndex = null, productById = null] =
+  //     this.findTheProductById(id);
+  //   this.productsList.splice(productIndex, 1);
+  // }
 
-  private findTheProductById(id: string): [number, IProduct] {
-    const productById = this.productsList.find(
-      (eachProduct: IProduct) => eachProduct.id === id,
-    );
+  private async findTheProductById(id: string): Promise<IProduct> {
+    const productById = await this.productModel.findById(id);
+    const filteredData = this.filterTheReturnData(productById);
     if (!productById) {
       throw new NotFoundException('Product not found');
     }
-    const productIndex = this.productsList.findIndex(
-      (eachProduct: IProduct) => eachProduct.id === id,
-    );
-    return [productIndex, productById];
+    return filteredData;
+  }
+
+  private filterTheReturnData(products: IProduct): IProduct {
+    return {
+      id: products.id,
+      title: products.title,
+      description: products.description,
+      price: products.price,
+    };
   }
 }
