@@ -1,16 +1,19 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Customexception } from 'src/exception/customexception';
-import { IProduct } from './products.model';
+import { IProduct, Product } from './products.model';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel('Products') private readonly productModel: Model<IProduct>,
+    @InjectModel('Products') private readonly productModel: Model<Product>,
   ) {}
-
-  productsList: IProduct[] = [];
 
   async insertProduct(
     title: string,
@@ -23,7 +26,6 @@ export class ProductsService {
       return saveResult.id;
     } catch (error) {
       console.log(error.message);
-
       throw new Customexception(
         'Unable to Save the product',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -93,7 +95,7 @@ export class ProductsService {
     return productById;
   }
 
-  private filterTheReturnData(products: IProduct): any {
+  private filterTheReturnData(products: IProduct | any): any {
     return {
       id: products.id,
       title: products.title,
