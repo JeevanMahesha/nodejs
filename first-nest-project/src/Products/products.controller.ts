@@ -19,7 +19,7 @@ export class ProductsController {
   @Post()
   async addProduct(
     @Body('title') prodTitle: string,
-    @Body('des') prodDes: string,
+    @Body('description') prodDes: string,
     @Body('price') prodPrice: number,
   ): Promise<{ prodId: string }> {
     const result = await this.productService.insertProduct(
