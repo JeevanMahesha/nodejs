@@ -5,7 +5,10 @@ const PACKAGE_JSON = "package.json";
 const isPackageLockJson = true;
 fs.readdirSync(__dirname).forEach((folderName) => {
 	let data = path.join(folderName, "node_modules");
-	if (!folderName.includes(".") && path.join(folderName, PACKAGE_JSON)) {
+	if (
+		!folderName.includes(".") &&
+		fs.existsSync(path.join(folderName, PACKAGE_JSON))
+	) {
 		if (isPackageLockJson) {
 			let package_lock_json = path.join(folderName, PACKAGE_LOCK_JSON);
 			if (fs.existsSync(package_lock_json)) {
