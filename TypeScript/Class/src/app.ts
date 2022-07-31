@@ -1,6 +1,6 @@
 class Department {
 	// name: string;
-	private employees: string[] = [];
+	protected employees: string[] = [];
 
 	// constructor(userName: string) {
 	// 	this.name = userName;
@@ -30,6 +30,8 @@ userOne.printEmployeeInformation();
 
 userOne.describe();
 
+console.log(userOne);
+
 class ITDepartment extends Department {
 	admins: string[] = [];
 	constructor(id: string, admins: string[]) {
@@ -43,3 +45,37 @@ const ITDepartment1 = new ITDepartment("002222222222", ["READ"]);
 ITDepartment1.describe();
 
 console.log(ITDepartment1);
+
+class AccountingDepartment extends Department {
+	constructor(id: string, private reports: string[]) {
+		super(id, "Account");
+	}
+
+	addEmployee(employee: string): void {
+		if (employee === "EMP1") {
+			return;
+		}
+		this.employees.push(employee);
+	}
+
+	addReport(text: string) {
+		this.reports.push(text);
+	}
+
+	printReports() {
+		console.log(this.reports);
+	}
+}
+
+const account001 = new AccountingDepartment("003", []);
+
+account001.addEmployee("EMP1");
+account001.addEmployee("EMP2");
+
+account001.addReport("REPORT TEXT");
+
+account001.printReports();
+
+account001.printEmployeeInformation();
+
+console.log(account001);
