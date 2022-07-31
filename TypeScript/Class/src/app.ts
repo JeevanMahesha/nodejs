@@ -1,5 +1,6 @@
 class Department {
 	// name: string;
+	static fiscalYear = 2022;
 	protected employees: string[] = [];
 
 	// constructor(userName: string) {
@@ -31,6 +32,8 @@ userOne.printEmployeeInformation();
 userOne.describe();
 
 console.log(userOne);
+// static can be used class name
+console.log(Department.fiscalYear);
 
 class ITDepartment extends Department {
 	admins: string[] = [];
