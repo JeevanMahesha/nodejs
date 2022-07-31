@@ -53,11 +53,20 @@ console.log(ITDepartment1);
 class AccountingDepartment extends Department {
 	private lastReport: string;
 
+	private static instance: AccountingDepartment;
+
 	get mostRecentReport(): string {
 		if (this.lastReport) {
 			return this.lastReport;
 		}
 		throw new Error("Unable to fetch the last report");
+	}
+
+	static getInstance() {
+		if (!this.instance) {
+			this.instance = new AccountingDepartment("003", []);
+		}
+		return this.instance;
 	}
 
 	set mostRecentReport(text: string) {
@@ -67,7 +76,7 @@ class AccountingDepartment extends Department {
 		this.addReport(text);
 	}
 
-	constructor(id: string, private reports: string[]) {
+	private constructor(id: string, private reports: string[]) {
 		super(id, "Account");
 		this.lastReport = reports[reports.length - 1];
 	}
@@ -93,7 +102,9 @@ class AccountingDepartment extends Department {
 	}
 }
 
-const account001 = new AccountingDepartment("003", []);
+// const account001 = new AccountingDepartment("003", []);
+
+const account001 = AccountingDepartment.getInstance();
 
 account001.addEmployee("EMP1");
 account001.addEmployee("EMP2");
