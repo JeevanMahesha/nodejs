@@ -47,8 +47,25 @@ ITDepartment1.describe();
 console.log(ITDepartment1);
 
 class AccountingDepartment extends Department {
+	private lastReport: string;
+
+	get mostRecentReport(): string {
+		if (this.lastReport) {
+			return this.lastReport;
+		}
+		throw new Error("Unable to fetch the last report");
+	}
+
+	set mostRecentReport(text: string) {
+		if (!text) {
+			throw new Error("Please pass in a valid value!");
+		}
+		this.addReport(text);
+	}
+
 	constructor(id: string, private reports: string[]) {
 		super(id, "Account");
+		this.lastReport = reports[reports.length - 1];
 	}
 
 	addEmployee(employee: string): void {
@@ -60,6 +77,7 @@ class AccountingDepartment extends Department {
 
 	addReport(text: string) {
 		this.reports.push(text);
+		this.lastReport = text;
 	}
 
 	printReports() {
@@ -73,6 +91,8 @@ account001.addEmployee("EMP1");
 account001.addEmployee("EMP2");
 
 account001.addReport("REPORT TEXT");
+account001.mostRecentReport = "Report TEXT-2";
+console.log(account001.mostRecentReport);
 
 account001.printReports();
 
