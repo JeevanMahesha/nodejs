@@ -29,3 +29,17 @@ userOne.addEmployee("EMP2");
 userOne.printEmployeeInformation();
 
 userOne.describe();
+
+class ITDepartment extends Department {
+	admins: string[] = [];
+	constructor(id: string, admins: string[]) {
+		super(id, "IT");
+		this.admins = admins;
+	}
+}
+
+const ITDepartment1 = new ITDepartment("002222222222", ["READ"]);
+
+ITDepartment1.describe();
+
+console.log(ITDepartment1);
