@@ -1,4 +1,4 @@
-class Department {
+abstract class Department {
 	// name: string;
 	static fiscalYear = 2022;
 	protected employees: string[] = [];
@@ -7,11 +7,9 @@ class Department {
 	// 	this.name = userName;
 	// }
 
-	constructor(private readonly id: string, public name: string) {}
+	constructor(protected readonly id: string, public name: string) {}
 
-	describe(this: Department) {
-		console.log(this.id, this.name);
-	}
+	abstract describe(this: Department): void;
 
 	addEmployee(employee: string): void {
 		this.employees.push(employee);
@@ -23,19 +21,22 @@ class Department {
 	}
 }
 
-const userOne = new Department("001", "Jeevan");
+// const userOne = new Department("001", "Jeevan");
 
-userOne.addEmployee("EMP1");
-userOne.addEmployee("EMP2");
-userOne.printEmployeeInformation();
+// userOne.addEmployee("EMP1");
+// userOne.addEmployee("EMP2");
+// userOne.printEmployeeInformation();
 
-userOne.describe();
+// userOne.describe();
 
-console.log(userOne);
+// console.log(userOne);
 // static can be used class name
 console.log(Department.fiscalYear);
 
 class ITDepartment extends Department {
+	describe(): void {
+		console.log("IT Department ID : ", this.id);
+	}
 	admins: string[] = [];
 	constructor(id: string, admins: string[]) {
 		super(id, "IT");
@@ -71,6 +72,10 @@ class AccountingDepartment extends Department {
 		this.lastReport = reports[reports.length - 1];
 	}
 
+	describe(): void {
+		console.log("Accounting ID : ", this.id);
+	}
+
 	addEmployee(employee: string): void {
 		if (employee === "EMP1") {
 			return;
@@ -95,10 +100,10 @@ account001.addEmployee("EMP2");
 
 account001.addReport("REPORT TEXT");
 account001.mostRecentReport = "Report TEXT-2";
-console.log(account001.mostRecentReport);
+// console.log(account001.mostRecentReport);
+// account001.printReports();
+// account001.printEmployeeInformation();
 
-account001.printReports();
-
-account001.printEmployeeInformation();
+account001.describe();
 
 console.log(account001);
