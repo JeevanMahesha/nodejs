@@ -1,10 +1,12 @@
 class Department {
-	name: string;
+	// name: string;
 	private employees: string[] = [];
 
-	constructor(userName: string) {
-		this.name = userName;
-	}
+	// constructor(userName: string) {
+	// 	this.name = userName;
+	// }
+
+	constructor(public name: string) {}
 
 	addEmployee(employee: string): void {
 		this.employees.push(employee);
