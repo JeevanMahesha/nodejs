@@ -6,7 +6,11 @@ class Department {
 	// 	this.name = userName;
 	// }
 
-	constructor(public name: string) {}
+	constructor(private readonly id: string, public name: string) {}
+
+	describe(this: Department) {
+		console.log(this.id, this.name);
+	}
 
 	addEmployee(employee: string): void {
 		this.employees.push(employee);
@@ -18,8 +22,10 @@ class Department {
 	}
 }
 
-const userOne = new Department("Jeevan");
+const userOne = new Department("001", "Jeevan");
 
 userOne.addEmployee("EMP1");
 userOne.addEmployee("EMP2");
 userOne.printEmployeeInformation();
+
+userOne.describe();
