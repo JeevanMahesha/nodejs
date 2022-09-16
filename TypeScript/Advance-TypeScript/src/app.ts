@@ -84,3 +84,46 @@ function useVehicle(vehicle: Vehicle) {
 
 useVehicle(v1);
 useVehicle(v2);
+
+interface Bird {
+	type: "bird"; // littoral type
+	flyingSpeed: number;
+}
+
+interface Horse {
+	type: "horse"; // littoral type and here type is user define
+	runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+
+function animalMovement(animal: Animal) {
+	// if ("flyingSpeed" in animal) {
+	// 	console.log("Speed is " + animal.flyingSpeed);
+	// }
+	let Speed;
+	switch (animal.type) {
+		case "bird":
+			Speed = animal.flyingSpeed;
+			break;
+		case "horse":
+			Speed = animal.runningSpeed;
+			break;
+		default:
+			break;
+	}
+	console.log("Speed is " + Speed);
+}
+
+const bird: Bird = {
+	flyingSpeed: 20,
+	type: "bird",
+};
+
+const horse: Horse = {
+	runningSpeed: 200,
+	type: "horse",
+};
+
+animalMovement(bird);
+animalMovement(horse);
