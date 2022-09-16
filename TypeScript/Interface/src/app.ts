@@ -1,7 +1,10 @@
-interface IPerson {
+interface IGreet {
+	greet(): void;
+}
+
+interface IPerson extends IGreet {
 	name: string;
 	readonly age: number;
-	greet(): void;
 }
 
 class Person implements IPerson {
