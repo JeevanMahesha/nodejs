@@ -127,3 +127,8 @@ const horse: Horse = {
 
 animalMovement(bird);
 animalMovement(horse);
+
+const userInputMessage = <HTMLInputElement>document.getElementById("message")!;
+// const userInputMessage = (document.getElementById('message') as HTMLInputElement )!
+
+userInputMessage.value = "Hi everyone";
