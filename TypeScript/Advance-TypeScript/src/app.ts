@@ -36,3 +36,20 @@ const e2: ElevatedEmployee = {
 	privileges: ["create-server"],
 	startDate: new Date(),
 };
+// ! Type Guards
+type UnknownEmployee = Employee | Admin;
+
+function printEmployeeInformation(emp: UnknownEmployee) {
+	console.log("Name " + emp.name);
+	// ? in is used to check the property exist in the object or not
+	if ("privileges" in emp) {
+		console.log("Privileges " + emp.privileges);
+	}
+
+	if ("startDate" in emp) {
+		console.log("Start Date " + emp.startDate);
+	}
+}
+
+printEmployeeInformation(e2);
+printEmployeeInformation({ name: "dummy", startDate: new Date() });
