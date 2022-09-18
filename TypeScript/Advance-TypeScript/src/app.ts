@@ -136,3 +136,9 @@ function createCourseGoal(
 
 	return <CourseGoal>courseGoal;
 }
+
+const readOnlyNames: ReadonlyArray<string> = ["jeevan", "jeevan1"];
+/* 
+this will throw an error as it's readonly
+readOnlyNames.push("jeevan3");
+ */
