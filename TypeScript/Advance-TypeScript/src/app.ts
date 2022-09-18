@@ -52,3 +52,46 @@ function extractConvert<T extends object, U extends keyof T>(obj: T, key: U) {
 }
 
 console.log(extractConvert({ name: "jeevan" }, "name"));
+
+class DataStorage<T extends string | number> {
+	private data: Array<T> = [];
+
+	addItem(item: T) {
+		this.data.push(item);
+	}
+
+	removeItem(item: T) {
+		this.data.splice(this.data.indexOf(item), 1);
+	}
+
+	getItem() {
+		return this.data.slice();
+	}
+}
+
+const textStorage = new DataStorage<string>();
+
+textStorage.addItem("Jeevan");
+textStorage.addItem("Jeevan1");
+textStorage.addItem("Jeevan2");
+console.log(textStorage.getItem());
+textStorage.removeItem("Jeevan2");
+console.log(textStorage.getItem());
+
+const numberStorage = new DataStorage<number>();
+
+numberStorage.addItem(1);
+numberStorage.addItem(3);
+numberStorage.addItem(2);
+console.log(numberStorage.getItem());
+numberStorage.removeItem(3);
+console.log(numberStorage.getItem());
+
+// const objectStorage = new DataStorage<object>();
+
+// objectStorage.addItem({ name: "jeevan" });
+// objectStorage.addItem({ name: "jeevan1" });
+// objectStorage.addItem({ name: "jeevan2" });
+// console.log(objectStorage.getItem());
+// objectStorage.removeItem({ name: "jeevan3" });
+// console.log(objectStorage.getItem());
