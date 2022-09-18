@@ -132,3 +132,8 @@ const userInputMessage = <HTMLInputElement>document.getElementById("message")!;
 // const userInputMessage = (document.getElementById('message') as HTMLInputElement )!
 
 userInputMessage.value = "Hi everyone";
+
+// Dynamic Key Value interface it's called index property
+interface ErrorContainer {
+	[prop: string]: string;
+}
