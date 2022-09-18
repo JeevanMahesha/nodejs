@@ -41,3 +41,14 @@ function countAndPrint<T extends ILengthy>(element: T): [T, string] {
 }
 
 console.log(countAndPrint("Jeevan"));
+
+/* 
+
+? keyof is used to set a constrain that T object will have the property which U value
+
+*/
+function extractConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+	return obj[key];
+}
+
+console.log(extractConvert({ name: "jeevan" }, "name"));
