@@ -1,134 +1,144 @@
-// Code goes here!
+const names: Array<string> = []; // string[]
 
-type Admin = {
-	name: string;
-	privileges: string[];
-};
+const promise: Promise<string> = new Promise((resolve, _reject) => {
+	setTimeout(() => {
+		resolve("This is Finished");
+	}, 2000);
+});
 
-type Employee = {
-	name: string;
-	startDate: Date;
-};
+// =============================================================================================
 
-// ? Intersection type
-type ElevatedEmployee = Admin & Employee;
-
-const e1: ElevatedEmployee = {
-	name: "Max",
-	privileges: ["create-server"],
-	startDate: new Date(),
-};
-
-interface IAdmin {
-	name: string;
-	privileges: string[];
+// extends refers the type of T / U must be Object
+function merge<T extends object, U extends object>(
+	objectA: T,
+	objectB: U
+): T & U {
+	return Object.assign(objectA, objectB);
 }
 
-interface IEmployee {
-	name: string;
-	startDate: Date;
+/* 
+
+? This is once way 
+
+function merge<T, U>(objectA: T, objectB: U): T & U {
+	return Object.assign({}, objectA, objectB);
+}
+ */
+const mergedObj = merge({ name: "NAME" }, { age: 20 });
+
+// console.log(mergedObj);
+
+interface ILengthy {
+	length: number;
 }
 
-interface IElevatedEmployee extends IAdmin, IEmployee {}
-
-const e2: IElevatedEmployee = {
-	name: "jeevan",
-	privileges: ["create-server"],
-	startDate: new Date(),
-};
-// ! Type Guards
-type UnknownEmployee = Employee | Admin;
-
-function printEmployeeInformation(emp: UnknownEmployee) {
-	console.log("Name " + emp.name);
-	// ? in is used to check the property exist in the object or not
-	if ("privileges" in emp) {
-		console.log("Privileges " + emp.privileges);
+function countAndPrint<T extends ILengthy>(element: T): [T, string] {
+	let descriptionText = "Length is 0";
+	if (element.length > 0) {
+		descriptionText = "Length is " + element.length;
 	}
-
-	if ("startDate" in emp) {
-		console.log("Start Date " + emp.startDate);
-	}
+	return [element, descriptionText];
 }
 
-printEmployeeInformation(e2);
-// printEmployeeInformation({ name: "dummy", startDate: new Date() });
+console.log(countAndPrint("Jeevan"));
 
-class Car {
-	drive() {
-		console.log("Driving a car........");
-	}
-}
-class Truck {
-	drive() {
-		console.log("Driving a Truck........");
-	}
+/* 
 
-	loadCargo(amount: number) {
-		console.log("Load Cargo " + amount);
-	}
+? keyof is used to set a constrain that T object will have the property which U value
+
+*/
+function extractConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+	return obj[key];
 }
 
-const v1 = new Car();
-const v2 = new Truck();
+console.log(extractConvert({ name: "jeevan" }, "name"));
 
-type Vehicle = Car | Truck;
+class DataStorage<T extends string | number> {
+	private data: Array<T> = [];
 
-function useVehicle(vehicle: Vehicle) {
-	vehicle.drive();
-	// ? instanceof can be used only when we have Class
-	if (vehicle instanceof Truck) {
-		vehicle.loadCargo(5000);
+	addItem(item: T) {
+		this.data.push(item);
+	}
+
+	removeItem(item: T) {
+		this.data.splice(this.data.indexOf(item), 1);
+	}
+
+	getItem() {
+		return this.data.slice();
 	}
 }
 
-useVehicle(v1);
-useVehicle(v2);
+const textStorage = new DataStorage<string>();
 
-interface Bird {
-	type: "bird"; // littoral type
-	flyingSpeed: number;
+textStorage.addItem("Jeevan");
+textStorage.addItem("Jeevan1");
+textStorage.addItem("Jeevan2");
+console.log(textStorage.getItem());
+textStorage.removeItem("Jeevan2");
+console.log(textStorage.getItem());
+
+const numberStorage = new DataStorage<number>();
+
+numberStorage.addItem(1);
+numberStorage.addItem(3);
+numberStorage.addItem(2);
+console.log(numberStorage.getItem());
+numberStorage.removeItem(3);
+console.log(numberStorage.getItem());
+
+// const objectStorage = new DataStorage<object>();
+
+// objectStorage.addItem({ name: "jeevan" });
+// objectStorage.addItem({ name: "jeevan1" });
+// objectStorage.addItem({ name: "jeevan2" });
+// console.log(objectStorage.getItem());
+// objectStorage.removeItem({ name: "jeevan3" });
+// console.log(objectStorage.getItem());
+
+// Generic Utility Types
+interface CourseGoal {
+	title: string;
+	description: string;
+	completeData: Date;
 }
 
-interface Horse {
-	type: "horse"; // littoral type and here type is user define
-	runningSpeed: number;
+// function createCourseGoal(
+// 	title: string,
+// 	description: string,
+// 	completeData: Date
+// ): CourseGoal {
+// 	let courseGoal: CourseGoal = {
+// 		title: "",
+// 		description: "",
+// 		completeData: new Date(),
+// 	};
+// 	courseGoal.title = title;
+// 	courseGoal.description = description;
+// 	courseGoal.completeData = completeData;
+
+// 	return courseGoal;
+// }
+
+function createCourseGoal(
+	title: string,
+	description: string,
+	completeData: Date
+): CourseGoal {
+	/* 
+	 Partial this will make the interface value optional by default but when you return / pass that value from
+	 variable make sure you have type casted it
+	 */
+	let courseGoal: Partial<CourseGoal> = {};
+	courseGoal.title = title;
+	courseGoal.description = description;
+	courseGoal.completeData = completeData;
+
+	return <CourseGoal>courseGoal;
 }
 
-type Animal = Bird | Horse;
-
-function animalMovement(animal: Animal) {
-	// if ("flyingSpeed" in animal) {
-	// 	console.log("Speed is " + animal.flyingSpeed);
-	// }
-	let Speed;
-	switch (animal.type) {
-		case "bird":
-			Speed = animal.flyingSpeed;
-			break;
-		case "horse":
-			Speed = animal.runningSpeed;
-			break;
-		default:
-			break;
-	}
-	console.log("Speed is " + Speed);
-}
-
-const bird: Bird = {
-	flyingSpeed: 20,
-	type: "bird",
-};
-
-const horse: Horse = {
-	runningSpeed: 200,
-	type: "horse",
-};
-
-animalMovement(bird);
-animalMovement(horse);
-
-const userInputMessage = <HTMLInputElement>document.getElementById("message")!;
-// const userInputMessage = (document.getElementById('message') as HTMLInputElement )!
-
-userInputMessage.value = "Hi everyone";
+const readOnlyNames: ReadonlyArray<string> = ["jeevan", "jeevan1"];
+/* 
+this will throw an error as it's readonly
+readOnlyNames.push("jeevan3");
+ */
