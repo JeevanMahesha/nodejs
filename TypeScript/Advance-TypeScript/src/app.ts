@@ -26,4 +26,18 @@ function merge<T, U>(objectA: T, objectB: U): T & U {
  */
 const mergedObj = merge({ name: "NAME" }, { age: 20 });
 
-console.log(mergedObj);
+// console.log(mergedObj);
+
+interface ILengthy {
+	length: number;
+}
+
+function countAndPrint<T extends ILengthy>(element: T): [T, string] {
+	let descriptionText = "Length is 0";
+	if (element.length > 0) {
+		descriptionText = "Length is " + element.length;
+	}
+	return [element, descriptionText];
+}
+
+console.log(countAndPrint("Jeevan"));
