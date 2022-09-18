@@ -147,3 +147,12 @@ function add(a: any, b: any) {
 	}
 	return a + b;
 }
+
+// Nullish Coalescing
+
+const userInput = null;
+
+// if the userInput is null / undefine / empty string the default value will be served
+const storeData = userInput ?? "Default Value";
+
+console.log(storeData);
