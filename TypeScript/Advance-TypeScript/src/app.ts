@@ -95,3 +95,44 @@ console.log(numberStorage.getItem());
 // console.log(objectStorage.getItem());
 // objectStorage.removeItem({ name: "jeevan3" });
 // console.log(objectStorage.getItem());
+
+// Generic Utility Types
+interface CourseGoal {
+	title: string;
+	description: string;
+	completeData: Date;
+}
+
+// function createCourseGoal(
+// 	title: string,
+// 	description: string,
+// 	completeData: Date
+// ): CourseGoal {
+// 	let courseGoal: CourseGoal = {
+// 		title: "",
+// 		description: "",
+// 		completeData: new Date(),
+// 	};
+// 	courseGoal.title = title;
+// 	courseGoal.description = description;
+// 	courseGoal.completeData = completeData;
+
+// 	return courseGoal;
+// }
+
+function createCourseGoal(
+	title: string,
+	description: string,
+	completeData: Date
+): CourseGoal {
+	/* 
+	 Partial this will make the interface value optional by default but when you return / pass that value from
+	 variable make sure you have type casted it
+	 */
+	let courseGoal: Partial<CourseGoal> = {};
+	courseGoal.title = title;
+	courseGoal.description = description;
+	courseGoal.completeData = completeData;
+
+	return <CourseGoal>courseGoal;
+}
