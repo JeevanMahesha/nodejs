@@ -8,7 +8,11 @@ const promise: Promise<string> = new Promise((resolve, _reject) => {
 
 // =============================================================================================
 
-function merge<T extends object, U>(objectA: T, objectB: U): T & U {
+// extends refers the type of T / U must be Object
+function merge<T extends object, U extends object>(
+	objectA: T,
+	objectB: U
+): T & U {
 	return Object.assign(objectA, objectB);
 }
 
