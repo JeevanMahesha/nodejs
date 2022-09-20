@@ -39,6 +39,13 @@ const e2: IElevatedEmployee = {
 // ! Type Guards
 type UnknownEmployee = Employee | Admin;
 
+/**
+ * "If the object has a property called privileges, then print it out."
+ *
+ * The in operator is used to check if a property exists in an object
+ * @param {UnknownEmployee} emp - UnknownEmployee - This is the parameter that we're passing into the
+ * function.
+ */
 function printEmployeeInformation(emp: UnknownEmployee) {
 	console.log("Name " + emp.name);
 	// ? in is used to check the property exist in the object or not

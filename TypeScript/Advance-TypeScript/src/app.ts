@@ -1,144 +1,166 @@
-const names: Array<string> = []; // string[]
-
-const promise: Promise<string> = new Promise((resolve, _reject) => {
-	setTimeout(() => {
-		resolve("This is Finished");
-	}, 2000);
-});
-
-// =============================================================================================
-
-// extends refers the type of T / U must be Object
-function merge<T extends object, U extends object>(
-	objectA: T,
-	objectB: U
-): T & U {
-	return Object.assign(objectA, objectB);
-}
-
-/* 
-
-? This is once way 
-
-function merge<T, U>(objectA: T, objectB: U): T & U {
-	return Object.assign({}, objectA, objectB);
-}
+/**
+ * "The Logger function takes a string and returns a function that takes a constructor and logs the
+ * string."
+ *
+ * The Logger function is a factory function that returns a function.
+ *
+ * The returned function is a decorator.
+ *
+ * The decorator takes a constructor and logs the string
+ * @param {string} logString - string - This is the string that we want to log out.
+ * @returns A function that takes a constructor function as an argument.
  */
-const mergedObj = merge({ name: "NAME" }, { age: 20 });
-
-// console.log(mergedObj);
-
-interface ILengthy {
-	length: number;
+function Logger(logString: string) {
+	return (constructor: Function) => {
+		console.log(logString);
+		console.log(constructor);
+	};
 }
 
-function countAndPrint<T extends ILengthy>(element: T): [T, string] {
-	let descriptionText = "Length is 0";
-	if (element.length > 0) {
-		descriptionText = "Length is " + element.length;
-	}
-	return [element, descriptionText];
+/**
+ * It takes a template string and a hookId string as arguments, and returns a function that takes a
+ * constructor as an argument
+ * @param {string} templet - string - The HTML template to use.
+ * @param {string} hookId - The id of the element in the DOM that we want to render the component to.
+ * @returns A function that takes a constructor and returns a function that takes a constructor.
+ */
+function WithTemplate(templet: string, hookId: string) {
+	console.log("withTemplet");
+
+	return (constructor: any) => {
+		const hookEle = document.getElementById(hookId);
+		if (hookEle) {
+			hookEle.innerHTML = templet;
+			const p = new constructor();
+			hookEle.querySelector("h1")!.textContent = p.name;
+		}
+	};
 }
 
-console.log(countAndPrint("Jeevan"));
-
-/* 
-
-? keyof is used to set a constrain that T object will have the property which U value
-
-*/
-function extractConvert<T extends object, U extends keyof T>(obj: T, key: U) {
-	return obj[key];
-}
-
-console.log(extractConvert({ name: "jeevan" }, "name"));
-
-class DataStorage<T extends string | number> {
-	private data: Array<T> = [];
-
-	addItem(item: T) {
-		this.data.push(item);
-	}
-
-	removeItem(item: T) {
-		this.data.splice(this.data.indexOf(item), 1);
-	}
-
-	getItem() {
-		return this.data.slice();
+@Logger("Person")
+@WithTemplate("<h1>My Person Object</h1>", "app")
+class Person {
+	name = "Jeevan";
+	constructor() {
+		console.log("Creating Person object.....");
 	}
 }
 
-const textStorage = new DataStorage<string>();
+const p1 = new Person();
 
-textStorage.addItem("Jeevan");
-textStorage.addItem("Jeevan1");
-textStorage.addItem("Jeevan2");
-console.log(textStorage.getItem());
-textStorage.removeItem("Jeevan2");
-console.log(textStorage.getItem());
+// console.log(p1);
 
-const numberStorage = new DataStorage<number>();
+function Log(target: any, propertyName: string | Symbol) {
+	console.log("Property Decorator");
+	console.log(target, propertyName);
+}
 
-numberStorage.addItem(1);
-numberStorage.addItem(3);
-numberStorage.addItem(2);
-console.log(numberStorage.getItem());
-numberStorage.removeItem(3);
-console.log(numberStorage.getItem());
+function Log2(
+	target: any,
+	AccessorName: string | Symbol,
+	AccessorDescriptor: PropertyDescriptor
+) {
+	console.log("Accessor Decorator....");
+	console.log(target, AccessorName, AccessorDescriptor);
+}
 
-// const objectStorage = new DataStorage<object>();
+function Log3(
+	target: any,
+	methodName: string | Symbol,
+	methodDescriptor: PropertyDescriptor
+) {
+	console.log("Method Decorator....");
+	console.log(target, methodName, methodDescriptor);
+}
 
-// objectStorage.addItem({ name: "jeevan" });
-// objectStorage.addItem({ name: "jeevan1" });
-// objectStorage.addItem({ name: "jeevan2" });
-// console.log(objectStorage.getItem());
-// objectStorage.removeItem({ name: "jeevan3" });
-// console.log(objectStorage.getItem());
+function Log4(target: any, methodName: string | Symbol, position: number) {
+	console.log("Parameter Decorator....");
+	console.log(target, methodName, position);
+}
 
-// Generic Utility Types
-interface CourseGoal {
+class Product {
+	@Log
+	title: string | undefined;
+	constructor(title: string, private price: number) {
+		this.title = title;
+	}
+
+	@Log2
+	set priceValue(val: number) {
+		if (val <= 0) {
+			throw new Error("Invalid Price");
+		}
+		this.price = val;
+	}
+
+	@Log3
+	getPriceWithTax(@Log4 tax: number): number {
+		return this.price * (1 + tax);
+	}
+}
+
+interface ValidatorConfig {
+	[property: string]: {
+		[validateProp: string]: string[];
+	};
+}
+
+const registeredValidators: ValidatorConfig = {};
+
+function Require(target: any, propertyName: string) {
+	registeredValidators[target.constructor.name] = {
+		...registeredValidators[target.constructor.name],
+		[propertyName]: ["required"],
+	};
+}
+
+function PositiveNumber(target: any, propertyName: string) {
+	registeredValidators[target.constructor.name] = {
+		...registeredValidators[target.constructor.name],
+		[propertyName]: ["positive"],
+	};
+}
+
+function Validate(obj: any): boolean {
+	const objValidatorConfig = registeredValidators[obj.constructor.name];
+	if (!objValidatorConfig) {
+		return true;
+	} else {
+		let isValid = true;
+		for (const prop in objValidatorConfig) {
+			for (const validator of objValidatorConfig[prop]) {
+				switch (validator) {
+					case "required":
+						isValid = isValid && !!obj[prop];
+						break;
+					case "positive":
+						isValid = isValid && obj[prop] > 0;
+						break;
+				}
+			}
+		}
+		return isValid;
+	}
+}
+
+class Course {
+	@Require
 	title: string;
-	description: string;
-	completeData: Date;
+	@PositiveNumber
+	price: number;
+
+	constructor(t: string, p: number) {
+		this.title = t;
+		this.price = p;
+	}
 }
 
-// function createCourseGoal(
-// 	title: string,
-// 	description: string,
-// 	completeData: Date
-// ): CourseGoal {
-// 	let courseGoal: CourseGoal = {
-// 		title: "",
-// 		description: "",
-// 		completeData: new Date(),
-// 	};
-// 	courseGoal.title = title;
-// 	courseGoal.description = description;
-// 	courseGoal.completeData = completeData;
-
-// 	return courseGoal;
-// }
-
-function createCourseGoal(
-	title: string,
-	description: string,
-	completeData: Date
-): CourseGoal {
-	/* 
-	 Partial this will make the interface value optional by default but when you return / pass that value from
-	 variable make sure you have type casted it
-	 */
-	let courseGoal: Partial<CourseGoal> = {};
-	courseGoal.title = title;
-	courseGoal.description = description;
-	courseGoal.completeData = completeData;
-
-	return <CourseGoal>courseGoal;
-}
-
-const readOnlyNames: ReadonlyArray<string> = ["jeevan", "jeevan1"];
-/* 
-this will throw an error as it's readonly
-readOnlyNames.push("jeevan3");
- */
+setTimeout(() => {
+	const createdCourse = new Course("Jeevan", -2);
+	// const createdCourse = new Course("", 0);
+	console.log(createdCourse);
+	if (!Validate(createdCourse)) {
+		alert("Invalid input");
+		return;
+	}
+}, 2000);
