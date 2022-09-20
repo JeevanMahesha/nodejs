@@ -99,12 +99,48 @@ class Product {
 	}
 }
 
-function Require() {}
+interface ValidatorConfig {
+	[property: string]: {
+		[validateProp: string]: string[];
+	};
+}
 
-function PositiveNumber() {}
+const registeredValidators: ValidatorConfig = {};
 
-function Validate(obj: object): boolean {
-	return false;
+function Require(target: any, propertyName: string) {
+	registeredValidators[target.constructor.name] = {
+		...registeredValidators[target.constructor.name],
+		[propertyName]: ["required"],
+	};
+}
+
+function PositiveNumber(target: any, propertyName: string) {
+	registeredValidators[target.constructor.name] = {
+		...registeredValidators[target.constructor.name],
+		[propertyName]: ["positive"],
+	};
+}
+
+function Validate(obj: any): boolean {
+	const objValidatorConfig = registeredValidators[obj.constructor.name];
+	if (!objValidatorConfig) {
+		return true;
+	} else {
+		let isValid = true;
+		for (const prop in objValidatorConfig) {
+			for (const validator of objValidatorConfig[prop]) {
+				switch (validator) {
+					case "required":
+						isValid = isValid && !!obj[prop];
+						break;
+					case "positive":
+						isValid = isValid && obj[prop] > 0;
+						break;
+				}
+			}
+		}
+		return isValid;
+	}
 }
 
 class Course {
@@ -120,11 +156,11 @@ class Course {
 }
 
 setTimeout(() => {
-	// const createdCourse = new Course("Jeevan", 2);
-	const createdCourse = new Course("", 0);
+	const createdCourse = new Course("Jeevan", -2);
+	// const createdCourse = new Course("", 0);
 	console.log(createdCourse);
 	if (!Validate(createdCourse)) {
 		alert("Invalid input");
 		return;
 	}
-}, 3000);
+}, 2000);
