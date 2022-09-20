@@ -98,3 +98,33 @@ class Product {
 		return this.price * (1 + tax);
 	}
 }
+
+function Require() {}
+
+function PositiveNumber() {}
+
+function Validate(obj: object): boolean {
+	return false;
+}
+
+class Course {
+	@Require
+	title: string;
+	@PositiveNumber
+	price: number;
+
+	constructor(t: string, p: number) {
+		this.title = t;
+		this.price = p;
+	}
+}
+
+setTimeout(() => {
+	// const createdCourse = new Course("Jeevan", 2);
+	const createdCourse = new Course("", 0);
+	console.log(createdCourse);
+	if (!Validate(createdCourse)) {
+		alert("Invalid input");
+		return;
+	}
+}, 3000);
