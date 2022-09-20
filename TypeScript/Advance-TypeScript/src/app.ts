@@ -48,4 +48,53 @@ class Person {
 
 const p1 = new Person();
 
-console.log(p1);
+// console.log(p1);
+
+function Log(target: any, propertyName: string | Symbol) {
+	console.log("Property Decorator");
+	console.log(target, propertyName);
+}
+
+function Log2(
+	target: any,
+	AccessorName: string | Symbol,
+	AccessorDescriptor: PropertyDescriptor
+) {
+	console.log("Accessor Decorator....");
+	console.log(target, AccessorName, AccessorDescriptor);
+}
+
+function Log3(
+	target: any,
+	methodName: string | Symbol,
+	methodDescriptor: PropertyDescriptor
+) {
+	console.log("Method Decorator....");
+	console.log(target, methodName, methodDescriptor);
+}
+
+function Log4(target: any, methodName: string | Symbol, position: number) {
+	console.log("Parameter Decorator....");
+	console.log(target, methodName, position);
+}
+
+class Product {
+	@Log
+	title: string | undefined;
+	constructor(title: string, private price: number) {
+		this.title = title;
+	}
+
+	@Log2
+	set priceValue(val: number) {
+		if (val <= 0) {
+			throw new Error("Invalid Price");
+		}
+		this.price = val;
+	}
+
+	@Log3
+	getPriceWithTax(@Log4 tax: number): number {
+		return this.price * (1 + tax);
+	}
+}
