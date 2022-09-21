@@ -4,6 +4,9 @@ class ProjectInput {
 	templateElement: HTMLTemplateElement;
 	hostElement: HTMLDivElement;
 	element!: HTMLFormElement;
+	titleInputElement!: HTMLInputElement;
+	descriptionInputElement!: HTMLInputElement;
+	peopleInputElement!: HTMLInputElement;
 
 	constructor() {
 		this.templateElement = <HTMLTemplateElement>(
@@ -15,6 +18,16 @@ class ProjectInput {
 			true
 		);
 		this.element = importedNode.firstElementChild as HTMLFormElement;
+		this.element.id = "user-input";
+
+		this.titleInputElement = <HTMLInputElement>document.querySelector("#title");
+		this.descriptionInputElement = <HTMLInputElement>(
+			document.querySelector("#description")
+		);
+		this.peopleInputElement = <HTMLInputElement>(
+			document.querySelector("#people")
+		);
+
 		this.attach();
 	}
 
@@ -22,5 +35,7 @@ class ProjectInput {
 		this.hostElement.insertAdjacentElement("afterbegin", this.element);
 	}
 }
+
+console.log("asdasd");
 
 const prjInput = new ProjectInput();
