@@ -48,10 +48,37 @@ class ProjectInput {
 		this.configure();
 		this.attach();
 	}
+
+	private getUserInput(): [string, string, number] | void {
+		const enteredTitle = this.titleInputElement.value;
+		const enteredDescription = this.descriptionInputElement.value;
+		const enteredPeople = this.peopleInputElement.value;
+		if (
+			!enteredTitle.trim() ||
+			!enteredDescription.trim() ||
+			!enteredPeople.trim()
+		) {
+			alert("Please enter the valid values");
+		} else {
+			return [enteredTitle, enteredDescription, +enteredPeople];
+		}
+	}
+
+	private clearInputValues() {
+		this.titleInputElement.value = "";
+		this.descriptionInputElement.value = "";
+		this.peopleInputElement.value = "";
+	}
+
 	@autoBind
 	private submitHandler(event: Event) {
 		event.preventDefault();
-		console.log(this.titleInputElement.value);
+		const userInput = this.getUserInput();
+		if (Array.isArray(userInput)) {
+			const [titile, desc, people] = userInput;
+			console.log(titile, desc, people);
+			this.clearInputValues();
+		}
 	}
 
 	private configure() {
