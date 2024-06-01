@@ -34,5 +34,4 @@ function strStr(haystack: string, needle: string): number {
   return -1;
 }
 
-strStr("sadbutsad", "sad");
 console.log("🚀 ~ strStr(", strStr("sadbutsad", "sad"));
